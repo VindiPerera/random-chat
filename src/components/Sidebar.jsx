@@ -18,6 +18,7 @@ export default function Sidebar() {
     const { connection } = useConnection();
     let [onroom, setOnroom] = useState(false);
     let [online, setOnline] = useState(0);
+    let [showAlert, setShowAlert] = useState(false);
     const { pathname } = useRouter();
 /*     random user */
 
@@ -82,8 +83,9 @@ export default function Sidebar() {
     async function joinrandom(){
         if (filterrooms.length >= 1){
             const randomroom = getRandomInt(filterrooms.length)
-            JoinRoom(rooms[randomroom])
-            router.push(`/rooms/${rooms[randomroom].id}`)
+            JoinRoom(filterrooms[randomroom])
+        } else {
+            setShowAlert(true);
         }
     }
 
@@ -251,12 +253,67 @@ function CreateRoom(){
             </Dialog>
         </Transition>
 
+        {/* Custom Alert Dialog */}
+        <Transition appear show={showAlert} as={Fragment}>
+            <Dialog as="div" className="relative z-10" onClose={() => setShowAlert(false)}>
+                <Transition.Child
+                    as={Fragment}
+                    enter="ease-out duration-300"
+                    enterFrom="opacity-0"
+                    enterTo="opacity-100"
+                    leave="ease-in duration-200"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                >
+                    <div className="fixed inset-0 bg-black bg-opacity-50" />
+                </Transition.Child>
+
+                <div className="fixed inset-0 overflow-y-auto">
+                    <div className="flex min-h-full items-center justify-center p-4 text-center">
+                        <Transition.Child
+                            as={Fragment}
+                            enter="ease-out duration-300"
+                            enterFrom="opacity-0 scale-95"
+                            enterTo="opacity-100 scale-100"
+                            leave="ease-in duration-200"
+                            leaveFrom="opacity-100 scale-100"
+                            leaveTo="opacity-0 scale-95"
+                        >
+                            <Dialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-dark-1 p-6 text-left align-middle shadow-xl transition-all">
+                                <Dialog.Title
+                                    as="h3"
+                                    className="text-lg font-medium leading-6 text-white text-center"
+                                >
+                                    No Rooms Available
+                                </Dialog.Title>
+                                <div className="mt-2">
+                                    <p className="text-sm text-gray-300 text-center">
+                                        No public rooms available to join. Please create a room first!
+                                    </p>
+                                </div>
+
+                                <div className="mt-4">
+                                    <button
+                                        type="button"
+                                        className="transition-all duration-200 inline-flex justify-center w-full rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-500 text-base font-medium text-white hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:text-sm"
+                                        onClick={() => setShowAlert(false)}
+                                    >
+                                        OK
+                                    </button>
+                                </div>
+                            </Dialog.Panel>
+                        </Transition.Child>
+                    </div>
+                </div>
+            </Dialog>
+        </Transition>
+
         <div className="sticky top-0 md:h-screen md:w-96 bg-dark-2 text-white p-6 md:flex md:flex-col md:justify-between hidden">
         <div className="flex flex-col items-center space-y-3">
                 <span className="text-2xl font-semi-bold leading-normal mb-4"><div className="flex flex-row justify-between w-full items-center h-12 bg-zinc-500/10 p-2 rounded-lg"><img className="h-32 w-32 object-cover" src={mainConfig?.imageApp}/></div> <p className="text-sm flex flex-row items-center top-5 bg-dark-3 p-1 pl-3 rounded-xl absolute right-4 top-8">{online} <FontAwesomeIcon className=" h-3 mx-2" icon={faUser} /></p></span> 
            <div className="flex flex-row rounded-lg w-full"> 
                 <button onClick={() => router.push('/rooms/create')} className="m-2 w-full rounded-md px-4 py-2  text-gray-300 bg-zinc-500/10 hover:bg-zinc-500/20 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition-all duration-200 flex flex-row items-center justify-center">Create<FontAwesomeIcon className=" h-3 mx-2" icon={faPlus} /> </button>
-                <button onClick={() => joinrandom()} className="m-2 w-full rounded-md px-4 py-2  text-gray-300 bg-zinc-500/10 hover:bg-zinc-500/20 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition-all duration-200 flex flex-row items-center justify-center">Random<FontAwesomeIcon className=" h-3 mx-2" icon={faRandom} /></button></div>
+                <button onClick={() => joinrandom()} className="m-2 w-full rounded-md px-4 py-2  text-gray-300 bg-zinc-500/10 hover:bg-zinc-500/20 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition-all duration-200 flex flex-row items-center justify-center">Random Group<FontAwesomeIcon className=" h-3 mx-2" icon={faRandom} /></button></div>
                  <button onClick={() => chatrandom()} className="m-2 w-full rounded-md px-4 py-2  text-gray-300 bg-zinc-500/10 hover:bg-zinc-500/20 focus:outline-none focus:ring-2 focus:ring-gray-700 focus:ring-opacity-50 transition-all duration-200 flex flex-row items-center justify-center">Chat with stranger<FontAwesomeIcon className=" h-3 mx-2" icon={faUserSecret} /></button>
             </div>
             <div className="flex flex-col h-full mt-4 space-y-2">
