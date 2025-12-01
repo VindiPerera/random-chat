@@ -2,6 +2,7 @@ import { useConnection } from 'context/connect'
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from "framer-motion"
+import { mainConfig } from 'config/config';
 
 export default function Home() {
   const { connection } = useConnection();
@@ -41,7 +42,8 @@ export default function Home() {
     <div className='bg-dark-2'>
       <div className="h-screen m-30 md:h-screen relative flex flex-col justify-center items-center ">
         <div className="bg-dark-2 shadow-none p-10 pb-0 rounded-xl">
-          <div className="flex flex-col items-center space-y-3">
+          <div className="flex flex-col items-center ">
+            <img src={mainConfig.imageApp} alt="Logo" className="h-48 w-44  object-contain" />
             <span className="text-xl md:text-2xl font-semi-bold leading-normal text-white">Whats your name?</span>
           </div>
           {error && <div className="w-full rounded-md px-4 p-2 border-red-500 border text-red-500 bg-red-500/20 mt-4">
@@ -58,6 +60,15 @@ export default function Home() {
               </div>
             </div>
           </form>
+        </div>
+        
+        {/* Features Description */}
+        <div className=" max-w-lg mx-auto text-center">
+          <p className="text-gray-300 text-sm leading-relaxed">
+            Join random public rooms, chat with strangers in 1-on-1 private conversations, 
+            create your own group chats, participate in existing rooms, and access 
+            password-protected exclusive private rooms.
+          </p>
         </div>
       </div>
     </div>
